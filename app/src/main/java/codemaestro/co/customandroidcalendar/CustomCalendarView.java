@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,9 +20,9 @@ import java.util.List;
 
 public class CustomCalendarView extends FrameLayout implements View.OnClickListener {
 
-    private TextView mPagerTextMonth;
-    private ImageButton mButtonLeftArrow;
-    private ImageButton mButtonRightArrow;
+    private TextView monthTitleTextView;
+    private ImageButton previousMonthLeft;
+    private ImageButton nextMonthRight;
     private ViewPager mViewPager;
     private CalendarViewPagerAdapter mViewPagerAdapter;
 
@@ -44,12 +43,12 @@ public class CustomCalendarView extends FrameLayout implements View.OnClickListe
 
     private void init() {
         inflate(getContext(), R.layout.view_custom_calendar, this);
-        mViewPager = (ViewPager) findViewById(R.id.activity_main_view_pager);
-        mPagerTextMonth = (TextView) findViewById(R.id.activity_main_pager_text_month);
-        mButtonLeftArrow = (ImageButton) findViewById(R.id.activity_main_pager_button_left_arrow);
-        mButtonRightArrow = (ImageButton) findViewById(R.id.activity_main_pager_button_right_arrow);
-        mButtonLeftArrow.setOnClickListener(this);
-        mButtonRightArrow.setOnClickListener(this);
+        mViewPager = (ViewPager) findViewById(R.id.month_view_pager);
+        monthTitleTextView = (TextView) findViewById(R.id.custom_calendar_month_label);
+        previousMonthLeft = (ImageButton) findViewById(R.id.calendar_previous_month_button);
+        nextMonthRight = (ImageButton) findViewById(R.id.calendar_next_month_button);
+        previousMonthLeft.setOnClickListener(this);
+        nextMonthRight.setOnClickListener(this);
         buildCalendarView();
     }
 
@@ -57,11 +56,11 @@ public class CustomCalendarView extends FrameLayout implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.activity_main_pager_button_right_arrow:
+            case R.id.calendar_next_month_button:
                 int next = mViewPager.getCurrentItem() + 1;
                 mViewPager.setCurrentItem(next, true);
                 break;
-            case R.id.activity_main_pager_button_left_arrow:
+            case R.id.calendar_previous_month_button:
                 int prev = mViewPager.getCurrentItem() - 1;
                 mViewPager.setCurrentItem(prev, true);
                 break;
@@ -83,7 +82,7 @@ public class CustomCalendarView extends FrameLayout implements View.OnClickListe
         mViewPager.addOnPageChangeListener(mPageChangeListener);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(2);
-        mPagerTextMonth.setText(mViewPagerAdapter.getItemPageHeader(2));
+        monthTitleTextView.setText(mViewPagerAdapter.getItemPageHeader(2));
     }
 
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -100,7 +99,7 @@ public class CustomCalendarView extends FrameLayout implements View.OnClickListe
         @Override
         public void onPageScrollStateChanged(int state) {
             int position = mViewPager.getCurrentItem();
-            mPagerTextMonth.setText(mViewPagerAdapter.getItemPageHeader(position));
+            monthTitleTextView.setText(mViewPagerAdapter.getItemPageHeader(position));
 
             // current item is the first item in the list
             if (state == ViewPager.SCROLL_STATE_IDLE && position == 1) {

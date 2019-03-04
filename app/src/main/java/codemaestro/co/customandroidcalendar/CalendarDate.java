@@ -11,7 +11,7 @@ public class CalendarDate {
     /**
      * Constructor
      *
-     * @param day   is the number of day in the month.
+     * @param day   is the date number, 1st = 1, 2nd = 2, etc.
      * @param month value is 0-based: 0 for January, 11 for December.
      * @param year
      */

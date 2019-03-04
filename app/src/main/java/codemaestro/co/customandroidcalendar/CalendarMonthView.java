@@ -1,7 +1,6 @@
 package codemaestro.co.customandroidcalendar;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -12,8 +11,11 @@ import android.widget.TextView;
 public class CalendarMonthView extends FrameLayout {
 
     private GridLayout mGridLayout;
-    private ViewGroup mLayoutDays;
+    private ViewGroup dayNamesContainer;
     private CalendarDate mSelectedDate;
+
+    public static final int NUMBER_OF_WEEKS_IN_MONTH = 6;
+    public static final int NUMBER_OF_DAYS_IN_WEEK = 7;
 
     public CalendarMonthView(Context context) {
         super(context);
@@ -28,7 +30,7 @@ public class CalendarMonthView extends FrameLayout {
     private void init() {
         inflate(getContext(), R.layout.view_calendar_month, this);
         mGridLayout = (GridLayout) findViewById(R.id.view_calendar_month_grid);
-        mLayoutDays = (ViewGroup) findViewById(R.id.view_calendar_month_layout_days);
+        dayNamesContainer = (ViewGroup) findViewById(R.id.day_names_container);
     }
 
     public void buildView(CalendarMonth calendarMonth) {
@@ -38,48 +40,32 @@ public class CalendarMonthView extends FrameLayout {
 
     private void buildDaysLayout() {
         String[] days;
-        days = getResources().getStringArray(R.array.days_sunday_array);
+        days = getResources().getStringArray(R.array.days_starting_with_sunday);
 
-        for (int i = 0; i < mLayoutDays.getChildCount(); i++) {
-            TextView textView = (TextView) mLayoutDays.getChildAt(i);
+        for (int i = 0; i < dayNamesContainer.getChildCount(); i++) {
+            TextView textView = (TextView) dayNamesContainer.getChildAt(i);
             textView.setText(days[i]);
         }
     }
 
     private void buildGridView(CalendarMonth calendarMonth) {
-        int row = CalendarMonth.NUMBER_OF_WEEKS_IN_MONTH;
-        int col = CalendarMonth.NUMBER_OF_DAYS_IN_WEEK;
-        mGridLayout.setRowCount(row);
-        mGridLayout.setColumnCount(col);
+        mGridLayout.setRowCount(NUMBER_OF_WEEKS_IN_MONTH);
+        mGridLayout.setColumnCount(NUMBER_OF_DAYS_IN_WEEK);
 
         int screenWidth = Utils.getScreenWidth(getContext());
-        int width = screenWidth / col;
+        int width = screenWidth / NUMBER_OF_DAYS_IN_WEEK;
 
         for (CalendarDate date : calendarMonth.getDays()) {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = width;
             params.height = LayoutParams.WRAP_CONTENT;
 
-            CalendarDayView dayView = new CalendarDayView(getContext(), date);
-            dayView.setContentDescription(date.toString());
-            dayView.setLayoutParams(params);
-//            decorateDayView(dayView, date, calendarMonth.getMonth());
-            mGridLayout.addView(dayView);
+            CalendarDateView dateView = new CalendarDateView(getContext(), date);
+            dateView.setContentDescription(date.toString());
+            dateView.setLayoutParams(params);
+
+            mGridLayout.addView(dateView);
         }
     }
-//
-//    private void decorateDayView(CalendarDayView dayView, CalendarDate day, int month) {
-//        if (day.getMonth() != month) {
-//            dayView.setOtherMothTextColor();
-//        } else {
-//            dayView.setThisMothTextColor();
-//        }
-//
-//        if (mSelectedDate != null && mSelectedDate.isDateEqual(day)) {
-//            dayView.setPurpleSolidOvalBackground();
-//        } else {
-//            dayView.unsetPurpleSolidOvalBackground();
-//        }
-//    }
 
 }

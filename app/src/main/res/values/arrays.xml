@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="days_sunday_array">
+    <string-array name="days_starting_with_sunday">
         <item>Sun</item>
         <item>Mon</item>
         <item>Tue</item>
